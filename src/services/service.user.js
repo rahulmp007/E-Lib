@@ -2,13 +2,11 @@ const userRepo = require("../repository/repository.user");
 
 class UserService {
   async register(userData) {
-    const result = await userRepo.register(userData);
-    console.log(result);
-    return result;
+    return await userRepo.register(userData);
   }
 
-  async login() {
-    await userRepo.login();
+  async login(userData) {
+    return await userRepo.login(userData);
   }
 }
 
