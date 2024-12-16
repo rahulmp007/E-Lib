@@ -1,5 +1,6 @@
 const user = require("../model/model.user");
 const jwt = require("../utils/jwtutils");
+const bcrypt = require("bcrypt");
 const AppError = require("../utils/appError");
 
 class UserRepository {
@@ -23,12 +24,24 @@ class UserRepository {
   }
 
   async login(userData) {
-    const { username } = userData;
+    const { username, password } = userData;
     const email = username;
-    console.log(email);
 
-    const result = await user.findOne({ email: email });
-    return result;
+    const existingUser = await user.findOne({ email: email });
+
+    if (!existingUser) {
+      throw AppError("Invalid crdentials", 401);
+    }
+
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      throw new AppError("Invalid credentials", 401);
+    }
+    const token = jwt.generateToken({
+      id: existingUser._id,
+      email: existingUser.email,
+    });
+    return { status: "success", message: "login successfull", token: token };
   }
 
   async getAllUsers() {}

@@ -28,7 +28,7 @@ const appErrorHandler = (err, req, res, next) => {
     statusCode = err.statusCode;
   }
 
-  res.status(500).json({
+  res.status(statusCode || 500).json({
     status: false,
     message: message,
     ...(errors.length && { errors }),
