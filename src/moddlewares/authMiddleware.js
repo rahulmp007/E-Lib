@@ -13,6 +13,7 @@ const authorizationMiddleware = async (req, res, next) => {
 
   const verifiedUser = verifyToken(token, process.env.JWT_SECRET);
 
+
   if (!verifiedUser) {
     return res.status(401).json({ message: "Invalid token" });
   }
